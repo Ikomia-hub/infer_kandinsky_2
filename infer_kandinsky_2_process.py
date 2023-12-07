@@ -167,7 +167,7 @@ class InferKandinsky2Factory(dataprocess.CTaskFactory):
         dataprocess.CTaskFactory.__init__(self)
         # Set algorithm information/metadata here
         self.info.name = "infer_kandinsky_2"
-        self.info.short_description = "Kandinsky 2.2 text2image stable diffusion model."
+        self.info.short_description = "Kandinsky 2.2 text2image diffusion model."
         # relative path -> as displayed in Ikomia Studio algorithm tree
         self.info.path = "Plugins/Python/Diffusion"
         self.info.version = "1.0.0"
