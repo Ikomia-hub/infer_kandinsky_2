@@ -32,10 +32,9 @@ class InferKandinsky2Widget(core.CWorkflowTaskWidget):
         self.check_cuda.setEnabled(is_available())
 
         # Model name
-        self.combo_model = pyqtutils.append_combo(
-            self.grid_layout, "Model name")
-        self.combo_model.addItem("kandinsky-community/kandinsky-2-2-decoder")
-        self.combo_model.setCurrentText(self.parameters.model_name)
+        self.combo_model = pyqtutils.append_edit(self.grid_layout, "Model name", self.parameters.model_name)
+
+
 
         # Prompt
         self.edit_prompt = pyqtutils.append_edit(self.grid_layout, "Prompt", self.parameters.prompt)
@@ -96,7 +95,7 @@ class InferKandinsky2Widget(core.CWorkflowTaskWidget):
         # Apply button clicked slot
         self.emit_apply(self.parameters)
         self.parameters.update = True
-        self.parameters.model_name = self.combo_model.currentText()
+        self.parameters.model_name = self.combo_model.text()
         self.parameters.prompt = self.edit_prompt.text()
         self.parameters.num_inference_steps = self.spin_number_of_steps.value()
         self.parameters.guidance_scale = self.spin_guidance_scale.value()
