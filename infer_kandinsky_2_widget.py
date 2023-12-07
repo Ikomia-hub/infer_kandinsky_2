@@ -31,12 +31,6 @@ class InferKandinsky2Widget(core.CWorkflowTaskWidget):
                                                  self.parameters.cuda and is_available())
         self.check_cuda.setEnabled(is_available())
 
-
-        # Model CPU offload
-        self.check_model_cpu_offload = pyqtutils.append_check(self.grid_layout,
-                                                 "Model CPU offload",
-                                                 self.parameters.enable_model_cpu_offload)
-
         # Model name
         self.combo_model = pyqtutils.append_combo(
             self.grid_layout, "Model name")
@@ -60,7 +54,7 @@ class InferKandinsky2Widget(core.CWorkflowTaskWidget):
                                                     self.parameters.num_inference_steps,
                                                     min=1, step=1
                                                     )
-        
+
         # Image output size
         self.spin_height = pyqtutils.append_spin(
                                                 self.grid_layout,
@@ -100,10 +94,6 @@ class InferKandinsky2Widget(core.CWorkflowTaskWidget):
 
     def on_apply(self):
         # Apply button clicked slot
-
-
-
-        # Send signal to launch the algorithm main function
         self.emit_apply(self.parameters)
         self.parameters.update = True
         self.parameters.model_name = self.combo_model.currentText()
@@ -115,7 +105,6 @@ class InferKandinsky2Widget(core.CWorkflowTaskWidget):
         self.parameters.strength = self.spin_strength.value()
         self.parameters.negative_prompt = self.edit_negative_prompt.text()
         self.parameters.cuda = self.check_cuda.isChecked()
-        self.parameters.enable_model_cpu_offload = self.check_model_cpu_offload.isChecked()
 
 # --------------------
 # - Factory class to build algorithm widget object
