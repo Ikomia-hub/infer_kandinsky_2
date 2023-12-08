@@ -18,10 +18,12 @@ class InferKandinsky2Param(core.CWorkflowTaskParam):
         self.prompt = "portrait of a young women, blue eyes, cinematic"
         self.cuda = torch.cuda.is_available()
         self.guidance_scale = 1.0
+        self.prior_guidance_scale = 4.0
         self.negative_prompt = "low quality, bad quality"
         self.height = 768
         self.width = 768
         self.num_inference_steps = 100
+        self.prior_num_inference_steps = 25
         self.strength = 0.3
         self.seed = -1
         self.update = False
@@ -32,12 +34,14 @@ class InferKandinsky2Param(core.CWorkflowTaskParam):
         self.model_name = str(param_map["model_name"])
         self.prompt = str(param_map["prompt"])
         self.cuda = utils.strtobool(param_map["cuda"])
+        self.prior_guidance_scale = float(param_map["prior_guidance_scale"])
         self.guidance_scale = float(param_map["guidance_scale"])
         self.negative_prompt = str(param_map["negative_prompt"])
         self.seed = int(param_map["seed"])
         self.height = int(param_map["height"])
         self.width = int(param_map["width"])
         self.num_inference_steps = int(param_map["num_inference_steps"])
+        self.prior_num_inference_steps = int(param_map["prior_num_inference_steps"])
         self.strength = float(param_map["strength"])
         self.update = True
 
@@ -49,10 +53,12 @@ class InferKandinsky2Param(core.CWorkflowTaskParam):
         param_map["prompt"] = str(self.prompt)
         param_map["cuda"] = str(self.cuda)
         param_map["guidance_scale"] = str(self.guidance_scale)
+        param_map["prior_guidance_scale"] = str(self.prior_guidance_scale)
         param_map["negative_prompt"] = str(self.negative_prompt)
         param_map["height"] = str(self.height)
         param_map["width"] = str(self.width)
         param_map["num_inference_steps"] = str(self.num_inference_steps)
+        param_map["prior_num_inference_steps"] = str(self.prior_num_inference_steps)
         param_map["strength"] = str(self.strength)
         param_map["seed"] = str(self.seed)
 
@@ -91,7 +97,6 @@ class InferKandinsky2(dataprocess.CWorkflowTask):
         # Call begin_task_run() for initialization
         self.begin_task_run()
 
-
         # Get parameters
         param = self.get_param_object()
 
@@ -125,12 +130,12 @@ class InferKandinsky2(dataprocess.CWorkflowTask):
             else:
                 self.seed = param.seed
 
-            self.generator = torch.Generator(self.device).manual_seed(param.seed)
+            self.generator = torch.Generator(self.device).manual_seed(self.seed)
 
         with torch.no_grad():
             result = self.pipe(prompt=param.prompt,
                           negative_prompt=param.negative_prompt,
-                          prior_guidance_scale=param.guidance_scale,
+                          guidance_scale=param.guidance_scale,
                           height=param.height,
                           width=param.width,
                           generator=self.generator,
@@ -167,8 +172,8 @@ class InferKandinsky2Factory(dataprocess.CTaskFactory):
         self.info.version = "1.0.0"
         self.info.icon_path = "images/einstein.jpg"
         self.info.authors = "A. Shakhmatov, A. Razzhigaev, A. Nikolich, V. Arkhipkin, I. Pavlov, A. Kuznetsov, D. Dimitrov"
-        self.info.article = ""
-        self.info.journal = ""
+        self.info.article = "https://aclanthology.org/2023.emnlp-demo.25/"
+        self.info.journal = "ACL Anthology"
         self.info.year = 2023
         self.info.license = "Apache 2.0 License"
         # URL of documentation
