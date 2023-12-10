@@ -101,12 +101,11 @@ algo.set_parameters({
     'height': '768',
     })
 
-# Run directly on your image
+# Generate your image
 wf.run()
 
 # Display the image
 display(algo.get_output(0).get_image())
-
 ```
 
 ## :mag: Explore algorithm outputs
@@ -121,9 +120,9 @@ from ikomia.dataprocess.workflow import Workflow
 wf = Workflow()
 
 # Add algorithm
-algo = wf.add_task(name="infer_kandinsky_2", auto_connect=True)
+algo = wf.add_task(name="infer_kandinsky_2", auto_connect=False)
 
-# Run on your image  
+# Run  
 wf.run()
 
 # Iterate over outputs
