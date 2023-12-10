@@ -24,7 +24,6 @@ class InferKandinsky2Param(core.CWorkflowTaskParam):
         self.width = 768
         self.num_inference_steps = 100
         self.prior_num_inference_steps = 25
-        self.strength = 0.3
         self.seed = -1
         self.update = False
 
@@ -42,7 +41,6 @@ class InferKandinsky2Param(core.CWorkflowTaskParam):
         self.width = int(param_map["width"])
         self.num_inference_steps = int(param_map["num_inference_steps"])
         self.prior_num_inference_steps = int(param_map["prior_num_inference_steps"])
-        self.strength = float(param_map["strength"])
         self.update = True
 
     def get_values(self):
@@ -59,7 +57,6 @@ class InferKandinsky2Param(core.CWorkflowTaskParam):
         param_map["width"] = str(self.width)
         param_map["num_inference_steps"] = str(self.num_inference_steps)
         param_map["prior_num_inference_steps"] = str(self.prior_num_inference_steps)
-        param_map["strength"] = str(self.strength)
         param_map["seed"] = str(self.seed)
 
         return param_map

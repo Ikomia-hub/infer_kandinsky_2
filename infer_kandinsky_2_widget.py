@@ -90,16 +90,6 @@ class InferKandinsky2Widget(core.CWorkflowTaskWidget):
                                                 min=128, max=1024, step=1
                                                 )
 
-
-        # Negative prompt
-        self.spin_strength = pyqtutils.append_double_spin(
-                                                    self.grid_layout,
-                                                    "Strenght",
-                                                    self.parameters.strength,
-                                                    min=0, step=0.1, decimals=1
-
-                                                    )
-
        # Set widget layout
         self.set_layout(layout_ptr)
 
@@ -116,7 +106,6 @@ class InferKandinsky2Widget(core.CWorkflowTaskWidget):
         self.parameters.prior_guidance_scale = self.spin_prior_guidance_scale.value()
         self.parameters.width = self.spin_width.value()
         self.parameters.height = self.spin_height.value()
-        self.parameters.strength = self.spin_strength.value()
         self.parameters.negative_prompt = self.edit_negative_prompt.text()
         self.parameters.cuda = self.check_cuda.isChecked()
 
