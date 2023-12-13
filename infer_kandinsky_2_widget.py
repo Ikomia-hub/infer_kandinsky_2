@@ -1,7 +1,6 @@
 from ikomia import core, dataprocess
 from ikomia.utils import pyqtutils, qtconversion
 from infer_kandinsky_2.infer_kandinsky_2_process import InferKandinsky2Param
-from torch.cuda import is_available
 # PyQt GUI framework
 from PyQt5.QtWidgets import *
 
@@ -24,12 +23,6 @@ class InferKandinsky2Widget(core.CWorkflowTaskWidget):
         self.grid_layout = QGridLayout()
         # PyQt -> Qt wrapping
         layout_ptr = qtconversion.PyQtToQt(self.grid_layout)
-
-        # Cuda
-        self.check_cuda = pyqtutils.append_check(self.grid_layout,
-                                                 "Cuda",
-                                                 self.parameters.cuda and is_available())
-        self.check_cuda.setEnabled(is_available())
 
         # Model name
         self.combo_model = pyqtutils.append_edit(self.grid_layout, "Model name", self.parameters.model_name)
@@ -89,6 +82,14 @@ class InferKandinsky2Widget(core.CWorkflowTaskWidget):
                                                 self.parameters.width,
                                                 min=128, step=1
                                                 )
+        
+        # Seed
+        self.spin_seed = pyqtutils.append_spin(
+                                            self.grid_layout,
+                                            "Seed",
+                                            self.parameters.seed,
+                                            min=-1, step=1
+                                            )
 
        # Set widget layout
         self.set_layout(layout_ptr)
@@ -107,7 +108,7 @@ class InferKandinsky2Widget(core.CWorkflowTaskWidget):
         self.parameters.width = self.spin_width.value()
         self.parameters.height = self.spin_height.value()
         self.parameters.negative_prompt = self.edit_negative_prompt.text()
-        self.parameters.cuda = self.check_cuda.isChecked()
+        self.parameters.seed = self.spin_seed.value()
 
 # --------------------
 # - Factory class to build algorithm widget object
