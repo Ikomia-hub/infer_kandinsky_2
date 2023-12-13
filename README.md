@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="images/einstein.png" alt="Algorithm icon">
+  <img src="images/einstein.jpg" alt="Algorithm icon">
   <h1 align="center">infer_kandinsky_2</h1>
 </div>
 <br />
