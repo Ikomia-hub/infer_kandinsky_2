@@ -78,6 +78,8 @@ Ikomia Studio offers a friendly UI with the same features as the API.
 - **seed** (int) - default '-1': Seed value. '-1' generates a random number between 0 and 191965535.
 
 
+*note:"prior model" interprets and encodes the input text to understand the desired image content, while the "decoder model" translates this encoded information into the actual visual representation, effectively generating the image based on the text description.*
+
 ```python
 from ikomia.dataprocess.workflow import Workflow
 from ikomia.utils.displayIO import display
