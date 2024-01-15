@@ -1,7 +1,6 @@
 from ikomia import core, dataprocess
 from ikomia.utils import pyqtutils, qtconversion
 from infer_kandinsky_2.infer_kandinsky_2_process import InferKandinsky2Param
-from torch.cuda import is_available
 # PyQt GUI framework
 from PyQt5.QtWidgets import *
 
@@ -25,16 +24,8 @@ class InferKandinsky2Widget(core.CWorkflowTaskWidget):
         # PyQt -> Qt wrapping
         layout_ptr = qtconversion.PyQtToQt(self.grid_layout)
 
-        # Cuda
-        self.check_cuda = pyqtutils.append_check(self.grid_layout,
-                                                 "Cuda",
-                                                 self.parameters.cuda and is_available())
-        self.check_cuda.setEnabled(is_available())
-
         # Model name
         self.combo_model = pyqtutils.append_edit(self.grid_layout, "Model name", self.parameters.model_name)
-
-
 
         # Prompt
         self.edit_prompt = pyqtutils.append_edit(self.grid_layout, "Prompt", self.parameters.prompt)
@@ -46,6 +37,22 @@ class InferKandinsky2Widget(core.CWorkflowTaskWidget):
                                                     self.parameters.negative_prompt
                                                     )
 
+        # Number of inference steps - prior
+        self.spin_prior_number_of_steps = pyqtutils.append_spin(
+                                                    self.grid_layout,
+                                                    "Prior number of steps",
+                                                    self.parameters.prior_num_inference_steps,
+                                                    min=1, step=1
+                                                    )
+        
+        # Guidance scale
+        self.spin_prior_guidance_scale = pyqtutils.append_double_spin(
+                                                        self.grid_layout,
+                                                        "Prior guidance scale",
+                                                        self.parameters.prior_guidance_scale,
+                                                        min=0, step=0.1, decimals=1
+                                                    )
+
         # Number of inference steps
         self.spin_number_of_steps = pyqtutils.append_spin(
                                                     self.grid_layout,
@@ -53,23 +60,6 @@ class InferKandinsky2Widget(core.CWorkflowTaskWidget):
                                                     self.parameters.num_inference_steps,
                                                     min=1, step=1
                                                     )
-
-        # Image output size
-        self.spin_height = pyqtutils.append_spin(
-                                                self.grid_layout,
-                                                "Image height",
-                                                self.parameters.height,
-                                                min=128, max=1024, step=1
-                                                )
-
-        # Number of inference steps
-        self.spin_width = pyqtutils.append_spin(
-                                                self.grid_layout,
-                                                "Image width",
-                                                self.parameters.width,
-                                                min=128, max=1024, step=1
-                                                )
-
         # Guidance scale
         self.spin_guidance_scale = pyqtutils.append_double_spin(
                                                         self.grid_layout,
@@ -77,15 +67,29 @@ class InferKandinsky2Widget(core.CWorkflowTaskWidget):
                                                         self.parameters.guidance_scale,
                                                         min=0, step=0.1, decimals=1
                                                     )
-        # Negative prompt
-        self.spin_strength = pyqtutils.append_double_spin(
-                                                    self.grid_layout,
-                                                    "Strenght",
-                                                    self.parameters.strength,
-                                                    min=0, step=0.1, decimals=1
+        # Image output size
+        self.spin_height = pyqtutils.append_spin(
+                                                self.grid_layout,
+                                                "Image height",
+                                                self.parameters.height,
+                                                min=128, step=1
+                                                )
 
-                                                    )
-
+        # Number of inference steps
+        self.spin_width = pyqtutils.append_spin(
+                                                self.grid_layout,
+                                                "Image width",
+                                                self.parameters.width,
+                                                min=128, step=1
+                                                )
+        
+        # Seed
+        self.spin_seed = pyqtutils.append_spin(
+                                            self.grid_layout,
+                                            "Seed",
+                                            self.parameters.seed,
+                                            min=-1, step=1
+                                            )
 
        # Set widget layout
         self.set_layout(layout_ptr)
@@ -97,13 +101,14 @@ class InferKandinsky2Widget(core.CWorkflowTaskWidget):
         self.parameters.update = True
         self.parameters.model_name = self.combo_model.text()
         self.parameters.prompt = self.edit_prompt.text()
+        self.parameters.prior_num_inference_steps = self.spin_prior_number_of_steps.value()
         self.parameters.num_inference_steps = self.spin_number_of_steps.value()
         self.parameters.guidance_scale = self.spin_guidance_scale.value()
+        self.parameters.prior_guidance_scale = self.spin_prior_guidance_scale.value()
         self.parameters.width = self.spin_width.value()
         self.parameters.height = self.spin_height.value()
-        self.parameters.strength = self.spin_strength.value()
         self.parameters.negative_prompt = self.edit_negative_prompt.text()
-        self.parameters.cuda = self.check_cuda.isChecked()
+        self.parameters.seed = self.spin_seed.value()
 
 # --------------------
 # - Factory class to build algorithm widget object
